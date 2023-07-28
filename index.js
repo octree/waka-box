@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { WakaTimeClient, RANGE } = require("wakatime-client");
-const Octokit = require("@octokit/rest");
+const { Octokit } = require("@octokit/rest");
 
 const {
   GIST_ID: gistId,
@@ -9,8 +9,7 @@ const {
 } = process.env;
 
 const wakatime = new WakaTimeClient(wakatimeApiKey);
-
-const octokit = new Octokit({ auth: `token ${githubToken}` });
+const octokit = new Octokit({ auth: githubToken });
 
 async function main() {
   const stats = await wakatime.getMyStats({ range: RANGE.LAST_7_DAYS });
@@ -48,7 +47,7 @@ async function updateGist(stats) {
       files: {
         [filename]: {
           filename: `📊 Weekly development breakdown`,
-          content: lines.join("\n")
+          content: lines.join("\n") || "😴 A LAZY BONE"
         }
       }
     });
